@@ -41,11 +41,28 @@ public class ContactsController : ControllerBase
         return Ok(categories);
     }
     
+    [Authorize]
     [HttpGet]
     [Route("{id}")]
-    public IActionResult GetContact(string id)
+    public async Task<IActionResult> GetContact(string id)
     {
-        return Ok();
+        var contact = await _contactService.GetContactByIdAsync(id);
+        if (contact == null)
+            return NotFound();
+
+        var dto = new ContactDetailsDto
+        {
+            Id = contact.Id,
+            FirstName = contact.FirstName,
+            LastName = contact.LastName,
+            Email = contact.Email ?? string.Empty,
+            Phone = contact.Phone,
+            BirthDate = contact.BirthDate.ToString("yyyy-MM-dd"),
+            Category = contact.Category?.Name ?? string.Empty,
+            Subcategory = contact.Subcategory?.Name ?? contact.CustomSubcategory
+        };
+
+        return Ok(dto);
     }
 
     [Authorize]

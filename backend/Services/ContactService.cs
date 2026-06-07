@@ -14,7 +14,10 @@ public class ContactService(AppDbContext _dbContext, UserManager<Contact> _userM
 
         public async Task<Contact?> GetContactByIdAsync(string id)
         {
-            throw new NotImplementedException();
+            return await _dbContext.Users
+                .Include(c => c.Category)
+                .Include(c => c.Subcategory)
+                .FirstOrDefaultAsync(c => c.Id == id);
         }
 
         public async Task<Contact> CreateContactAsync(Contact contact, string password)
