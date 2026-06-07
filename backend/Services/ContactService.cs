@@ -1,8 +1,9 @@
-﻿using backend.Models;
+﻿using backend.Database;
+using backend.Models;
 
 namespace backend.Services;
 
-public class ContactService : IContactService
+public class ContactService(AppDbContext _dbContext) : IContactService
 {
         public Task<List<Contact>> GetContactsAsync()
         {

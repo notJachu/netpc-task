@@ -1,21 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity;
 
 namespace backend.Models;
 
-public class Contact
+public class Contact : IdentityUser
 {
-    public int Id { get; set; }
-    
     [MaxLength(50)]
     public string FirstName { get; set; } = string.Empty;
     [MaxLength(50)]
     public string LastName { get; set; } = string.Empty;
-    [MaxLength(255)]
-    public string Email { get; set; } = string.Empty; 
-        
-    [MaxLength(255)]
-    public string PasswordHash { get; set; } = string.Empty; 
-        
+    
     [MaxLength(20)]
     public string Phone { get; set; } = string.Empty;
     public DateTime BirthDate { get; set; }

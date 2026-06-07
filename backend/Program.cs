@@ -1,4 +1,5 @@
 using backend.Database;
+using backend.Models;
 using backend.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,6 +23,14 @@ public class Program
             options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
         });
         
+        builder.Services.AddIdentityApiEndpoints<Contact>(options =>
+            {
+                options.Password.RequireDigit = true;
+                options.Password.RequiredLength = 8;
+                
+                options.User.RequireUniqueEmail = true;
+            })
+            .AddEntityFrameworkStores<AppDbContext>();
         // Services
         builder.Services.AddScoped<IContactService, ContactService>();
         
@@ -38,7 +47,7 @@ public class Program
 
         app.UseAuthorization();
 
-
+        app.MapIdentityApi<Contact>();
         app.MapControllers();
 
         app.Run();
