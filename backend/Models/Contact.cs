@@ -1,9 +1,31 @@
-﻿namespace backend.Models;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace backend.Models;
 
 public class Contact
 {
     public int Id { get; set; }
     
-    public String Name { get; set; } = String.Empty;
-    public String Email { get; set; } = String.Empty;
+    [MaxLength(50)]
+    public string FirstName { get; set; } = string.Empty;
+    [MaxLength(50)]
+    public string LastName { get; set; } = string.Empty;
+    [MaxLength(255)]
+    public string Email { get; set; } = string.Empty; 
+        
+    [MaxLength(255)]
+    public string PasswordHash { get; set; } = string.Empty; 
+        
+    [MaxLength(20)]
+    public string Phone { get; set; } = string.Empty;
+    public DateTime BirthDate { get; set; }
+
+    public int CategoryId { get; set; }
+    public Category Category { get; set; } = null!;
+
+    public int? SubcategoryId { get; set; }
+    public Subcategory? Subcategory { get; set; }
+
+    [MaxLength(255)]
+    public string? CustomSubcategory { get; set; }
 }
