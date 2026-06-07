@@ -1,4 +1,5 @@
 using backend.Database;
+using backend.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend;
@@ -20,6 +21,9 @@ public class Program
             {
             options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
         });
+        
+        // Services
+        builder.Services.AddScoped<IContactService, ContactService>();
         
         var app = builder.Build();
 
