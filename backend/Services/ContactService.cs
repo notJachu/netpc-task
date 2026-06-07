@@ -1,31 +1,32 @@
 ﻿using backend.Database;
 using backend.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace backend.Services;
 
 public class ContactService(AppDbContext _dbContext) : IContactService
 {
-        public Task<List<Contact>> GetContactsAsync()
+        public async Task<List<Contact>> GetContactsAsync()
+        {
+            return await _dbContext.Users.ToListAsync();
+        }
+    
+        public async Task<Contact?> GetContactByIdAsync(string id)
         {
             throw new NotImplementedException();
         }
     
-        public Task<Contact> GetContactByIdAsync(int id)
+        public async Task<Contact> CreateContactAsync(Contact contact)
         {
             throw new NotImplementedException();
         }
     
-        public Task<Contact> CreateContactAsync(Contact contact)
+        public async Task<Contact> UpdateContactAsync(string id, Contact contact)
         {
             throw new NotImplementedException();
         }
     
-        public Task<Contact> UpdateContactAsync(int id, Contact contact)
-        {
-            throw new NotImplementedException();
-        }
-    
-        public Task<bool> DeleteContactAsync(int id)
+        public async Task<bool> DeleteContactAsync(string id)
         {
             throw new NotImplementedException();
         }

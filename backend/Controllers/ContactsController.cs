@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using backend.Models;
+using backend.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Controllers;
 
@@ -6,18 +8,33 @@ namespace backend.Controllers;
 [Route("[controller]")]
 public class ContactsController : ControllerBase
 {
+    private readonly IContactService _contactService;
+
+    public ContactsController(IContactService contactService)
+    {
+        _contactService = contactService;
+    }
 
     [HttpGet]
     [Route("list")]
-    public IActionResult GetContactList()
+    public async Task<IActionResult> GetContactList()
     {
+        var contacts = await _contactService.GetContactsAsync();
+        var dtoList = contacts.Select(c => new ContactListDto
+        {
+            Id = c.Id,
+            FirstName = c.FirstName,
+            LastName = c.LastName,
+            Email = c.Email ?? string.Empty,
+            Phone = c.Phone
+        }).ToList();
         
-        return Ok();
+        return Ok(dtoList);
     }
     
     [HttpGet]
     [Route("{id}")]
-    public IActionResult GetContact(int id)
+    public IActionResult GetContact(string id)
     {
         return Ok();
     }
@@ -32,14 +49,14 @@ public class ContactsController : ControllerBase
 
     [HttpPut]
     [Route("{id}")]
-    public IActionResult UpdateContact(int id)
+    public IActionResult UpdateContact(string id)
     {
         return Ok();
     }
 
     [HttpDelete]
     [Route("{id}")]
-    public IActionResult DeleteContact(int id)
+    public IActionResult DeleteContact(string id)
     {
         return Ok();
     }
