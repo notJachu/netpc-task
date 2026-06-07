@@ -34,6 +34,14 @@ public class ContactsController : ControllerBase
     }
 
     [HttpGet]
+    [Route("categories")]
+    public async Task<IActionResult> GetCategories()
+    {
+        var categories = await _contactService.GetCategoriesAsync();
+        return Ok(categories);
+    }
+    
+    [HttpGet]
     [Route("{id}")]
     public IActionResult GetContact(string id)
     {

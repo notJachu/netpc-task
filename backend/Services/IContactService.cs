@@ -9,4 +9,5 @@ public interface IContactService
     Task<Contact> CreateContactAsync(Contact contact, string password);
     Task<Contact> UpdateContactAsync(string id, Contact contact);
     Task<bool> DeleteContactAsync(string id);
+    Task<List<CategoryDto>> GetCategoriesAsync();
 }

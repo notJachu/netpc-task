@@ -39,4 +39,19 @@ public class ContactService(AppDbContext _dbContext, UserManager<Contact> _userM
             throw new NotImplementedException();
         }
 
+        public async Task<List<CategoryDto>> GetCategoriesAsync()
+        {
+            return await _dbContext.Categories
+                .Include(c => c.Subcategories)
+                .Select(c => new CategoryDto
+                {
+                    Id = c.Id,
+                    Name = c.Name,
+                    Subcategories = c.Subcategories.Select(s => new SubcategoryDto
+                    {
+                        Id = s.Id,
+                        Name = s.Name
+                    }).ToList()
+                }).ToListAsync();
+        }
 }
