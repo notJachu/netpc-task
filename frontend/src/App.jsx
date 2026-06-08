@@ -5,8 +5,9 @@ import Home from './pages/Home.jsx';
 import Contacts from './pages/Contacts.jsx';
 import Login from './pages/Login.jsx';
 import ContactDetails from './pages/ContactDetails.jsx';
+import CreateContact from './pages/CreateContact.jsx';
+import EditContact from './pages/EditContact.jsx';
 import NotFound from './pages/NotFound.jsx';
-import EditContact from "./pages/EditContact.jsx";
 
 function Navigation() {
     const isLoggedIn = !!localStorage.getItem('isLoggedIn');
@@ -19,7 +20,7 @@ function Navigation() {
 
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark px-3">
-          <Link to="/" className="navbar-brand">DEMO APP</Link>
+          <Link to="/" className="navbar-brand">NetPC App</Link>
           <div className="collapse navbar-collapse">
             <ul className="navbar-nav me-auto">
                 <li className="nav-item">
@@ -29,11 +30,11 @@ function Navigation() {
             <ul className="navbar-nav">
                 {isLoggedIn ? (
                     <li className="nav-item">
-                        <button onClick={handleLogout} className="btn btn-link nav-link">Log out</button>
+                        <button onClick={handleLogout} className="btn btn-link nav-link">Wyloguj</button>
                     </li>
                 ) : (
                     <li className="nav-item">
-                        <Link to="/login" className="nav-link">Log in</Link>
+                        <Link to="/login" className="nav-link">Logowanie</Link>
                     </li>
                 )}
             </ul>
@@ -47,12 +48,22 @@ function App() {
   return (
     <>
       <BrowserRouter>
-          <Navigation />
+        <Navigation />
+
         <div className="container mt-4">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/contacts" element={<Contacts />} />
             <Route path="/login" element={<Login />} />
+
+            <Route
+              path="/contacts/add"
+              element={
+                <ProtectedRoute>
+                  <CreateContact />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/contacts/:id"
               element={
