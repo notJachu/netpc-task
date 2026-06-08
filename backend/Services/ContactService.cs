@@ -39,7 +39,14 @@ public class ContactService(AppDbContext _dbContext, UserManager<Contact> _userM
 
         public async Task<bool> DeleteContactAsync(string id)
         {
-            throw new NotImplementedException();
+            var contact = await _userManager.FindByIdAsync(id);
+            if (contact == null)
+            {
+                return false;
+            }
+            
+            var result = await _userManager.DeleteAsync(contact);
+            return result.Succeeded;
         }
 
         public async Task<List<CategoryDto>> GetCategoriesAsync()

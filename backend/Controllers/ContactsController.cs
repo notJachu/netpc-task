@@ -107,11 +107,16 @@ public class ContactsController : ControllerBase
         return Ok();
     }
 
+    [Authorize]
     [HttpDelete]
     [Route("{id}")]
-    public IActionResult DeleteContact(string id)
+    public async Task<IActionResult> DeleteContact(string id)
     {
-        return Ok();
+        var success = await _contactService.DeleteContactAsync(id);
+        if (!success)
+            return NotFound();
+
+        return NoContent();
     }
 
 }
