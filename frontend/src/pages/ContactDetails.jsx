@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 
 export default function ContactDetails() {
     const { id } = useParams();
+    const navigate = useNavigate();
     const [contact, setContact] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [deleting, setDeleting] = useState(false);
 
     useEffect(() => {
         fetch(`http://localhost:5158/Contacts/${id}`, {
@@ -31,9 +33,36 @@ export default function ContactDetails() {
             });
     }, [id]);
 
+    const handleDelete = async () => {
+        if (!window.confirm('Are you sure you want to delete this contact?')) {
+            return;
+        }
+
+        setDeleting(true);
+        try {
+            const response = await fetch(`http://localhost:5158/Contacts/${id}`, {
+                method: 'DELETE',
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                navigate('/contacts');
+            } else {
+                const errText = await response.text();
+                setError(errText || 'An error occurred while deleting.');
+                setDeleting(false);
+            }
+        } catch (err) {
+            setError(err.message);
+            setDeleting(false);
+        }
+    };
+
     if (loading) return <div className="mt-5 text-center">Loading details</div>;
     if (error) return <div className="mt-5 alert alert-danger">Error {error}</div>;
     if (!contact) return <div className="mt-5 alert alert-warning">Nothing to display</div>;
+
+    const isLoggedIn = !!localStorage.getItem('isLoggedIn');
 
     return (
         <div className="mt-4">
@@ -75,7 +104,16 @@ export default function ContactDetails() {
                 </div>
                 <div className="card-footer d-flex justify-content-between bg-white">
                     <Link to="/contacts" className="btn btn-secondary">Back to list</Link>
-                    <Link to={`/contacts/${id}/edit`} className="btn btn-primary">Edit</Link>
+                    <div>
+                        {isLoggedIn && (
+                            <button onClick={handleDelete} className="btn btn-danger me-2" disabled={deleting}>
+                                {deleting ? 'Deleting...' : 'Delete'}
+                            </button>
+                        )}
+                        {isLoggedIn && (
+                            <Link to={`/contacts/${id}/edit`} className="btn btn-primary">Edit</Link>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
