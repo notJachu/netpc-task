@@ -100,11 +100,42 @@ public class ContactsController : ControllerBase
         }
     }
 
+    [Authorize]
     [HttpPut]
     [Route("{id}")]
-    public IActionResult UpdateContact(string id)
+    public async Task<IActionResult> UpdateContact(string id, [FromBody] ContactUpdateCreateDto dto)
     {
-        return Ok();
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        DateTime parsedDate;
+        if (!DateTime.TryParse(dto.BirthDate, out parsedDate))
+            return BadRequest("Invalid birth date format.");
+
+        var contact = new Contact
+        {
+            FirstName = dto.FirstName,
+            LastName = dto.LastName,
+            Email = dto.Email,
+            Phone = dto.Phone,
+            BirthDate = parsedDate.ToUniversalTime(),
+            CategoryId = dto.CategoryId,
+            SubcategoryId = dto.SubcategoryId,
+            CustomSubcategory = dto.CustomSubcategory
+        };
+
+        try
+        {
+            await _contactService.UpdateContactAsync(id, contact, dto.Password);
+            return NoContent();
+        }
+        catch (Exception ex)
+        {
+            if (ex.Message == "Contact not found")
+                return NotFound();
+                
+            return BadRequest(ex.Message);
+        }
     }
 
     [Authorize]

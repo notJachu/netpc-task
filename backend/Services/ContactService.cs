@@ -32,9 +32,43 @@ public class ContactService(AppDbContext _dbContext, UserManager<Contact> _userM
             return contact;
         }
 
-        public async Task<Contact> UpdateContactAsync(string id, Contact contact)
+        public async Task<Contact> UpdateContactAsync(string id, Contact contact, string? newPassword = null)
         {
-            throw new NotImplementedException();
+            var existingContact = await _userManager.FindByIdAsync(id);
+            if (existingContact == null)
+            {
+                throw new Exception("Contact not found");
+            }
+
+            existingContact.FirstName = contact.FirstName;
+            existingContact.LastName = contact.LastName;
+            existingContact.Email = contact.Email;
+            existingContact.UserName = contact.Email;
+            existingContact.Phone = contact.Phone;
+            existingContact.BirthDate = contact.BirthDate;
+            existingContact.CategoryId = contact.CategoryId;
+            existingContact.SubcategoryId = contact.SubcategoryId;
+            existingContact.CustomSubcategory = contact.CustomSubcategory;
+
+            var result = await _userManager.UpdateAsync(existingContact);
+            if (!result.Succeeded)
+            {
+                var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                throw new Exception($"Failed to update contact: {errors}");
+            }
+
+            if (!string.IsNullOrEmpty(newPassword))
+            {
+                var token = await _userManager.GeneratePasswordResetTokenAsync(existingContact);
+                var passResult = await _userManager.ResetPasswordAsync(existingContact, token, newPassword);
+                if (!passResult.Succeeded)
+                {
+                    var errors = string.Join(", ", passResult.Errors.Select(e => e.Description));
+                    throw new Exception($"Failed to update password: {errors}");
+                }
+            }
+
+            return existingContact;
         }
 
         public async Task<bool> DeleteContactAsync(string id)
