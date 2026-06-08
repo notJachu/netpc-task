@@ -30,13 +30,13 @@ export default function Login() {
                 localStorage.setItem('isLoggedIn', 'true');
                 navigate('/contacts')
             } else if (response.status === 401) {
-                setError('Nieprawidłowy email lub hasło.');
+                setError('Invalid email or password.');
             } else {
                 const errorData = await response.text();
-                setError(errorData || 'Wystąpił błąd podczas logowania.');
+                setError(errorData || 'Enexpected error occured');
             }
         } catch (err) {
-            setError('Błąd połączenia z serwerem: ' + err.message);
+            setError('Server connection error: ' + err.message);
         } finally {
             setLoading(false);
         }
