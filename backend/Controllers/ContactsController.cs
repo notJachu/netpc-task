@@ -59,7 +59,10 @@ public class ContactsController : ControllerBase
             Phone = contact.Phone,
             BirthDate = contact.BirthDate.ToString("yyyy-MM-dd"),
             Category = contact.Category?.Name ?? string.Empty,
-            Subcategory = contact.Subcategory?.Name ?? contact.CustomSubcategory
+            Subcategory = contact.Subcategory?.Name ?? contact.CustomSubcategory,
+            CategoryId = contact.CategoryId,
+            SubcategoryId = contact.SubcategoryId,
+            CustomSubcategory = contact.CustomSubcategory
         };
 
         return Ok(dto);

@@ -17,4 +17,10 @@ public class ContactDetailsDto
     public string Category { get; set; } = string.Empty;
     
     public string? Subcategory { get; set; } = null;
+    
+    public int CategoryId { get; set; }
+    
+    public int? SubcategoryId { get; set; }
+    
+    public string? CustomSubcategory { get; set; }
 }

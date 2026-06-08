@@ -6,6 +6,7 @@ import Contacts from './pages/Contacts.jsx';
 import Login from './pages/Login.jsx';
 import ContactDetails from './pages/ContactDetails.jsx';
 import NotFound from './pages/NotFound.jsx';
+import EditContact from "./pages/EditContact.jsx";
 
 function Navigation() {
     const isLoggedIn = !!localStorage.getItem('isLoggedIn');
@@ -57,6 +58,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <ContactDetails />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/contacts/:id/edit"
+              element={
+                <ProtectedRoute>
+                  <EditContact />
                 </ProtectedRoute>
               }
             />
