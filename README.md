@@ -92,7 +92,42 @@ Categories and subcategories exist as entities in the code, however they don't h
 thus they are handled by the contatct service and controller.
 
 ### Deployment
+General instructions:
+```bash
+# Relese version in on the master branch
+git clone https://github.com/notJachu/netpc-task.git
+
+cd netpc-task
+```
+
+> Before deployment it is highly advised to change the database credentials in `compse.yaml` and `appsettings[.Developement].josn` 
 
 #### Development
+These are the instructions to run developement environment.
+```bash
+# we assume the working directory of the project
+
+# start the database
+docker compose up -d postgres
+
+# backend
+cd backend/
+# restore project
+dotnet restore
+# run app
+dotnet run
+# hot reload
+dotnet watch
+
+# gui
+cd frontend/
+# install dependancies
+npm i
+# run dev server
+npm run dev
+```
 
 #### Production
+```bash
+docker compose up --build
+```
