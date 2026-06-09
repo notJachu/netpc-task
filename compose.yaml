@@ -1,0 +1,35 @@
+﻿services:
+  backend:
+    image: backend
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    ports:
+      - "5158:8080"
+    depends_on:
+      - postgres
+    
+  frontend:
+    image: frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+
+  postgres:
+    image: postgres:18
+    restart: no
+    # shared memory size
+    shm_size: 128mb
+    user: "${UID}:${GID}"
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: db_user
+      POSTGRES_DB: contact_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./PostgresDb:/var/lib/postgresql
