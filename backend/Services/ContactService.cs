@@ -11,7 +11,12 @@ public class ContactService(AppDbContext _dbContext, UserManager<Contact> _userM
         {
             return await _dbContext.Users.ToListAsync();
         }
-
+        
+        /// <summary>
+        /// Gets a contact by ID, including their category and subcategory information.
+        /// </summary>
+        /// <param name="id">Contact id</param>
+        /// <returns>Contact on success, null on fail</returns>
         public async Task<Contact?> GetContactByIdAsync(string id)
         {
             return await _dbContext.Users
@@ -19,7 +24,15 @@ public class ContactService(AppDbContext _dbContext, UserManager<Contact> _userM
                 .Include(c => c.Subcategory)
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
-
+        
+        /// <summary>
+        /// Creates a new contact with the specified information and password.
+        /// The contact's username is set to their email address.
+        /// </summary>
+        /// <param name="contact">Contact object</param>
+        /// <param name="password">Contact password (plaintext)</param>
+        /// <returns>Contact with set username</returns>
+        /// <exception cref="Exception"></exception>
         public async Task<Contact> CreateContactAsync(Contact contact, string password)
         {
             contact.UserName = contact.Email;
@@ -31,7 +44,15 @@ public class ContactService(AppDbContext _dbContext, UserManager<Contact> _userM
             }
             return contact;
         }
-
+        
+        /// <summary>
+        /// Updates contact information and optionally their password. If a new password is provided, it will be updated as well.
+        /// </summary>
+        /// <param name="id">Contact id</param>
+        /// <param name="contact">Contact</param>
+        /// <param name="newPassword">Optional, new password (plaintext)</param>
+        /// <returns>Updated contact</returns>
+        /// <exception cref="Exception"></exception>
         public async Task<Contact> UpdateContactAsync(string id, Contact contact, string? newPassword = null)
         {
             var existingContact = await _userManager.FindByIdAsync(id);
@@ -71,6 +92,11 @@ public class ContactService(AppDbContext _dbContext, UserManager<Contact> _userM
             return existingContact;
         }
 
+        /// <summary>
+        /// Deletes a contact by their ID.
+        /// </summary>
+        /// <param name="id">Contact id</param>
+        /// <returns>true if success, false if fail</returns>
         public async Task<bool> DeleteContactAsync(string id)
         {
             var contact = await _userManager.FindByIdAsync(id);
@@ -82,7 +108,11 @@ public class ContactService(AppDbContext _dbContext, UserManager<Contact> _userM
             var result = await _userManager.DeleteAsync(contact);
             return result.Succeeded;
         }
-
+        
+        /// <summary>
+        /// Gets all categories with their subcategories.
+        /// </summary>
+        /// <returns>Category list with subcategories.</returns>
         public async Task<List<CategoryDto>> GetCategoriesAsync()
         {
             return await _dbContext.Categories

@@ -15,7 +15,8 @@ public class ContactsController : ControllerBase
     {
         _contactService = contactService;
     }
-
+    
+    // This endpoint is public and does not require authentication
     [HttpGet]
     [Route("list")]
     public async Task<IActionResult> GetContactList()
